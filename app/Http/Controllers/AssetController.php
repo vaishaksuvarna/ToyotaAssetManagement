@@ -52,32 +52,35 @@ class AssetController extends Controller
     
     public function store(Request $request)
     {
-        try{             
-            $asset = new Asset;
-                
-            $asset->assetId = $request->assetId;
-            $asset->department  = $request->department ;
-            $asset->section = $request->section;
-            $asset->assetName = $request->assetName;
-            $asset->financialAssetId = $request->financialAssetId;
-            $asset->vendorName = $request->vendorName;
-            $asset->phoneNumber = $request->phoneNumber;
-            $asset->email = $request->email;
-            $asset->vendorAddress = $request->vendorAddress;
-            $asset->assetType = $request->assetType;
-            $asset->manufacturer = $request->manufacturer;
-            $asset->assetModel = $request->assetModel;
-            $asset->poNo = $request->poNo;
-            $asset->invoiceNo = $request->invoiceNo;
-            $asset->typeWarranty = $request->typeWarranty;
+        try{ 
+            $asset = DB::table('assets')->where('assetName','=',$request->assetName)->get();
 
-            if($asset->typeWarranty == 'warranty'){
-            $asset->warrantyStartDate = $request->warrantyStartDate;
-            $asset->warrantyEndDate = $request->warrantyEndDate; 
+            if(count($asset)>0){
+                throw new Exception("AssetName already exists!");
 
-                //imageStoring warrantyDocument
-                $image = $request->warrantyDocument; 
-                if($image){ // your base64 encoded
+            }else{
+                $asset = new Asset;
+                    
+                $asset->assetId = $request->assetId;
+                $asset->department  = $request->department;
+                $asset->section = $request->section;
+                $asset->assetName = $request->assetName;
+                $asset->financialAssetId = $request->financialAssetId;
+                $asset->assetType = $request->assetType;
+                $asset->unit = $request->unit;
+                $asset->project  = $request->project;
+                $asset->line = $request->line;
+                $asset->operationNo = $request->operationNo;
+                $asset->usagecode = $request->usagecode;
+                $asset->yearOfMfg = $request->yearOfMfg;
+                $asset->usedOrNew = $request->usedOrNew;
+                $asset->requesterName = $request->requesterName;
+                $asset->manufacturer = $request->manufacturer;
+                $asset->description = $request->description;
+        
+                //imageStoring assteImage
+                $image = $request->assetImage;
+                if($image){  // your base64 encoded
                     $extension = $this->getExtension($image);
                     $replace = substr($image, 0, strpos($image, ',')+1); 
                     $image = str_replace($replace, '', $image); 
@@ -85,43 +88,11 @@ class AssetController extends Controller
                     $imageName = Str::random(10).'.'.$extension;
                     $imagePath = '/storage/app/public/'.$imageName;
                     Storage::disk('public')->put($imageName, base64_decode($image));
-                    $asset->warrantyDocument = $imagePath;
+                    $asset->assetImage = $imagePath;
                 }
-            }
 
-            if($asset->typeWarranty == 'noWarranty'){
-                $asset->warrantyStartDate = null;
-                $asset->warrantyEndDate = null; 
-                $asset->warrantyDocument = null; 
+                
             }
-            //imageStoring uploadDocument
-            $image = $request->uploadDocument; 
-            if($image){ // your base64 encoded
-                $extension = $this->getExtension($image);
-                $replace = substr($image, 0, strpos($image, ',')+1); 
-                $image = str_replace($replace, '', $image); 
-                $image = str_replace(' ', '+', $image); 
-                $imageName = Str::random(10).'.'.$extension;
-                $imagePath = '/storage/app/public/'.$imageName;
-                Storage::disk('public')->put($imageName, base64_decode($image));
-                $asset->uploadDocument = $imagePath;
-            }
-
-            $asset->description = $request->description;
-
-            //imageStoring assteImage
-            $image = $request->assetImage;
-            if($image){  // your base64 encoded
-                $extension = $this->getExtension($image);
-                $replace = substr($image, 0, strpos($image, ',')+1); 
-                $image = str_replace($replace, '', $image); 
-                $image = str_replace(' ', '+', $image); 
-                $imageName = Str::random(10).'.'.$extension;
-                $imagePath = '/storage/app/public/'.$imageName;
-                Storage::disk('public')->put($imageName, base64_decode($image));
-                $asset->assetImage = $imagePath;
-            }
-            $asset->allocated = "new";
 
             $asset->save();
             $response = [
@@ -131,6 +102,7 @@ class AssetController extends Controller
             ];
             $status = 201;   
           
+
         }catch(Exception $e){
             $response = [
                 "error"=>$e->getMessage(),
@@ -179,73 +151,36 @@ class AssetController extends Controller
             if(!$asset){
                 throw new Exception("asset not found");
             }
-                
-            // $asset->assetId = $request->assetId;
-            $asset->department  = $request->department ;
+
+            $asset->assetId = $request->assetId;
+            $asset->department  = $request->department;
             $asset->section = $request->section;
             $asset->assetName = $request->assetName;
             $asset->financialAssetId = $request->financialAssetId;
-            $asset->vendorName = $request->vendorName;
-            $asset->phoneNumber = $request->phoneNumber;
-            $asset->email = $request->email;
-            $asset->vendorAddress = $request->vendorAddress;
             $asset->assetType = $request->assetType;
+            $asset->unit = $request->unit;
+            $asset->project  = $request->project;
+            $asset->line = $request->line;
+            $asset->operationNo = $request->operationNo;
+            $asset->usagecode = $request->usagecode;
+            $asset->yearOfMfg = $request->yearOfMfg;
+            $asset->usedOrNew = $request->usedOrNew;
+            $asset->requesterName = $request->requesterName;
             $asset->manufacturer = $request->manufacturer;
-            $asset->assetModel = $request->assetModel;
-            $asset->poNo = $request->poNo;
-            $asset->invoiceNo = $request->invoiceNo;
-            $asset->typeWarranty = $request->typeWarranty;
-
-            if($asset->typeWarranty == 'warranty'){
-                $asset->warrantyStartDate = $request->warrantyStartDate;
-                $asset->warrantyEndDate = $request->warrantyEndDate; 
-    
-                //imageStoring warrantyDocument
-                $image = $request->warrantyDocument; 
-                if($image){ // your base64 encoded
-                    $extension = $this->getExtension($image); 
-                    $replace = substr($image, 0, strpos($image, ',')+1); 
-                    $image = str_replace($replace, '', $image); 
-                    $image = str_replace(' ', '+', $image); 
-                    $imageName = Str::random(10).'.'.$extension;
-                    $imagePath = '/storage/app/public/'.$imageName;
-                    Storage::disk('public')->put($imageName, base64_decode($image));
-                     $asset->warrantyDocument = $imagePath;
-                }
-            }
-                if($asset->typeWarranty == 'noWarranty'){
-                    $asset->warrantyStartDate = null;
-                    $asset->warrantyEndDate = null;  
-                    $asset->warrantyDocument = null; 
-                }
-                
-                //imageStoring uploadDocument
-                $image = $request->uploadDocument; 
-                if($image){ // your base64 encoded
-                    $extension = $this->getExtension($image);
-                    $replace = substr($image, 0, strpos($image, ',')+1); 
-                    $image = str_replace($replace, '', $image); 
-                    $image = str_replace(' ', '+', $image); 
-                    $imageName = Str::random(10).'.'.$extension;
-                    $imagePath = '/storage/app/public/'.$imageName;
-                    Storage::disk('public')->put($imageName, base64_decode($image));
-                    $asset->uploadDocument = $imagePath;
-                }
-    
             $asset->description = $request->description;
     
-                //imageStoring assteImage
-                $image = $request->assetImage;
-                if($image){  // your base64 encoded
-                    $extension = $this->getExtension($image);
-                    $replace = substr($image, 0, strpos($image, ',')+1); 
-                    $image = str_replace($replace, '', $image); 
-                    $image = str_replace(' ', '+', $image); 
-                    $imageName = Str::random(10).'.'.$extension;
-                    $imagePath = '/storage/app/public/'.$imageName;
-                    Storage::disk('public')->put($imageName, base64_decode($image));
-                    $asset->assetImage = $imagePath;
-                }
+            //imageStoring assteImage
+            $image = $request->assetImage;
+            if($image){  // your base64 encoded
+                $extension = $this->getExtension($image);
+                $replace = substr($image, 0, strpos($image, ',')+1); 
+                $image = str_replace($replace, '', $image); 
+                $image = str_replace(' ', '+', $image); 
+                $imageName = Str::random(10).'.'.$extension;
+                $imagePath = '/storage/app/public/'.$imageName;
+                Storage::disk('public')->put($imageName, base64_decode($image));
+                $asset->assetImage = $imagePath;
+            }            
     
             $asset->update();
             $response = [
@@ -306,11 +241,10 @@ class AssetController extends Controller
     public function showData()
     {
         try{    
+            $asset = DB::table('assets')->get();
 
-            $asset = DB::table('assets');
-
-            if(!$asset){
-               throw new Exception("Asset not found");
+            if(count($asset)<=0){
+               throw new Exception("Asset details not available");
 
             }else{
                 $asset = DB::table('assets')
@@ -321,8 +255,7 @@ class AssetController extends Controller
                      'departments.department_name as departmentName', 
                      'assets.section', 'sections.section as sectionName',
                      'assets.assetName', 'assets.assetType','assettypes.assetType as assetTypeName',
-                     'assets.manufacturer', 'assets.assetModel', 'assets.warrantyStartDate', 
-                     'assets.warrantyEndDate')
+                    )
                     ->get();
                         
                 $response=[
@@ -392,5 +325,4 @@ class AssetController extends Controller
     {
         return Excel::download(new TemplateExport, 'Template.xlsx');
     }
-
 }
