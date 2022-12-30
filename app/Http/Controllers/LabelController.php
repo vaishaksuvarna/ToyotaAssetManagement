@@ -38,8 +38,6 @@ class LabelController extends Controller
         }
         $Label->code = $request->code; 
         
-        // $getId = $this->assetGetId($request);
-        
         // QrCode
         if($Label->code == 'qrCode')
         {

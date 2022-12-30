@@ -72,6 +72,7 @@ class DashboardController extends Controller
     {
         $count = DB::table('assets')->where('allocated','=','new')->count();
         $counts= $count;
+
         return $counts;
     }
 
@@ -906,7 +907,7 @@ class DashboardController extends Controller
         $response["newAssetCount"] = $this->newAssetCount();
         $response["tagAssetsCount"] = $this->tagAssetsCount();
         $response["untagCount"] = $this->untagCount();
-        $response["warrantyDueCount"] = $this->warrantyDueCount();
+       // $response["warrantyDueCount"] = $this->warrantyDueCount();
         $response["serviceeDueCount"] = $this->serviceeDueCount();
         $response["inspectionDueCount"] = $this->inspectionDueCount();
         $response["amcDueCount"] = $this->amcDueCount();
