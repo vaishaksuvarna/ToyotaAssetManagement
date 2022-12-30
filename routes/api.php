@@ -111,8 +111,6 @@ Route::post('unit/{id}/delete',[UnitController::class,'destroy']);
 Route::get('unit/showData',[UnitController::class,'showData']);
 
 
-<<<<<<< HEAD
-=======
 //Project
 Route::post('project/add', [ProjectController::class, 'store']);
 Route::post('project/{id}/update', [ProjectController::class, 'update']);
@@ -127,7 +125,6 @@ Route::post('line/{id}/delete', [LineController::class, 'destroy']);
 Route::get('line/showData', [LineController::class, 'showData']);
 
 
->>>>>>> e24142997c4fe6bdc91b49f1c2676430d205be81
 //Label
 Route::post('label/add',[LabelController::class,'store']);
 Route::post('label/{id}/delete',[LabelController::class,'destroy']);
