@@ -167,6 +167,9 @@ Route::get('allocation/viewSelfAssessment', [AllocationController::class, 'viewS
 
 //TransferAsset
 Route::post('transferAsset/{id}', [TransferAssetController::class, 'transferData']);
+Route::get('transferAsset/getAssetId', [TransferAssetController::class, 'getAssetId']);
+Route::get('transferAsset/{id}/getAssetList', [TransferAssetController::class, 'getAssetList']);
+
 
 // AssetMaster
 Route::get('assetMaster/{id}/showData', [AssetMasterController::class, 'showData']);

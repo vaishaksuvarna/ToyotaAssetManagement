@@ -26,7 +26,7 @@ class TransferAssetController extends Controller
             
         } elseif ($extension == 'csv') {
             $response = 'csv';
-
+    
         } else {
 
             $extension1 = explode(";", $image)[0];
@@ -103,4 +103,72 @@ class TransferAssetController extends Controller
         return response($response,$status);
       
     }  
+
+    //To Get All The AssetID
+    public function getAssetId($id)
+    { 
+        try{ 
+
+            $result = DB::table('assets')->select('id','assetId')->get();
+
+            if(count($result)<=0){
+                throw new Exception("data not found");
+            }else{
+               
+                $response = [
+                    'data' => $result         
+                ];
+                $status = 201;   
+            }
+
+        }catch(Exception $e){
+                $response = [
+                    "message" => $e->getMessage(),
+                    "status" => 404
+                ];
+                $status = 404;       
+        }catch(QueryException $e){
+                $response = [
+                    "error" => $e->errorInfo,
+                ];
+                $status = 406; 
+        }
+
+        return response($response,$status);
+    }
+
+    
+    public function getAssetList($id)
+    { 
+        try{ 
+
+            $result = DB::table('assets')->where('id','=',$id)->get();
+
+
+            if(count($result)<=0){
+                throw new Exception("data not found");
+            }else{
+               
+                $response = [
+                    'success' => true,
+                    'data' => $result         
+                ];
+                $status = 201;   
+            }
+
+        }catch(Exception $e){
+                $response = [
+                    "error" => $e->getMessage(),
+                    "status" => 404
+                ];
+                $status = 404;       
+        }catch(QueryException $e){
+                $response = [
+                    "error" => $e->errorInfo,
+                ];
+                $status = 406; 
+        }
+
+        return response($response,$status);
+    }
 }
