@@ -109,7 +109,6 @@ Route::post('unit/{id}/delete',[UnitController::class,'destroy']);
 Route::get('unit/showData',[UnitController::class,'showData']);
 
 
-
 //Label
 Route::post('label/add',[LabelController::class,'store']);
 Route::post('label/{id}/delete',[LabelController::class,'destroy']);
