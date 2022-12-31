@@ -251,10 +251,13 @@ class AssetController extends Controller
                     ->join('departments','departments.id','=','assets.department')
                     ->join('sections','sections.id','=','assets.section')
                     ->join('assettypes','assettypes.id','=','assets.assetType')
+                    ->join('projects','projects.id','=','assets.project')
+                    ->join('units','units.id','=','assets.unit')
+                    ->join('lines','lines.id','=','assets.line')
                     ->select('assets.*','assets.id','assets.department',
                      'departments.department_name as departmentName', 
                      'assets.section', 'sections.section as sectionName',
-                     'assets.assetName', 'assets.assetType','assettypes.assetType as assetTypeName',
+                     'assets.assetName', 'assets.assetType','assettypes.assetType as assetTypeName','projects.projectName as projectName','units.unitName as unitName','lines.lineName as lineName'
                     )
                     ->get();
                         

@@ -38,6 +38,9 @@ return new class extends Migration
             $table->string('manufacturer');
             $table->string('description');
             $table->string('assetImage');
+            $table->string('fileUpload')->nullable();
+            $table->string('transfer')->nullable();
+            $table->string('allocated')->nullable();
             $table->timestamps();
         });
     }
