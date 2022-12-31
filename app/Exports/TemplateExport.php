@@ -18,19 +18,18 @@ class TemplateExport implements  WithHeadings
             'section',
             'assetName',
             'financialAssetId',
-            'vendorName',
-            'phoneNumber',
-            'email',
-            'vendorAddress',
             'assetType',
+            'unit',
+            'project',
+            'line',
+            'operationNo',
+            'usagecode',
+            'yearOfMfg',
+            'usedOrNew',
+            'requesterName',
             'manufacturer',
-            'assetModel',
-            'poNo',
-            'invoiceNo',
-            'typeWarranty',
-            'warrantyStartDate',
-            'warrantyEndDate',
-            'description'
+            'description',
         ];
     }
 }
+ 

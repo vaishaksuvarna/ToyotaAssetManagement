@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Asset;
 use Exception;
 use Illuminate\Database\QueryException;
+use DB;
 use Str;
 use Storage;
 
@@ -26,7 +27,7 @@ class TransferAssetController extends Controller
             
         } elseif ($extension == 'csv') {
             $response = 'csv';
-
+    
         } else {
 
             $extension1 = explode(";", $image)[0];
@@ -88,11 +89,47 @@ class TransferAssetController extends Controller
             }
 
         }catch(Exception $e){
+            $response = [
+                "error" => $e->getMessage(),
+                "status" => 404  
+            ];
+            $status = 404;     
+
+        }catch(QueryException $e){
                 $response = [
-                    "error" => $e->getMessage(),
+                    "error" => $e->errorInfo,
+                ];
+            $status = 406; 
+        }
+
+        return response($response,$status);
+      
+    }  
+
+    //To Get All The AssetID
+    public function getAssetId()
+    { 
+        try{ 
+
+            $result = DB::table('assets')->select('id','assetId')->get();
+
+            if(count($result)<=0){
+                throw new Exception("data not available");
+
+            }else{
+               
+                $response = [
+                    'data' => $result         
+                ];
+                $status = 201;   
+            }
+
+        }catch(Exception $e){
+       $response = [
+                    "message" => $e->getMessage(),
                     "status" => 404
                 ];
-                $status = 404;     
+                $status = 404;      
         }catch(QueryException $e){
                 $response = [
                     "error" => $e->errorInfo,
@@ -101,6 +138,51 @@ class TransferAssetController extends Controller
         }
 
         return response($response,$status);
-      
-    }  
+    }
+
+    
+    public function getAssetList($id)
+    { 
+        try{ 
+
+            $result = DB::table('assets')->where('id','=',$id)->get();
+
+            if(count($result)<=0){
+                throw new Exception("data not found");
+            }else{
+               
+                $result = DB::table('assets')
+                    ->where('assets.id','=',$id)
+                    ->join('departments','departments.id','=','assets.department')
+                    ->join('sections','sections.id','=','assets.section')
+                    ->join('projects','projects.id','=','assets.project')
+                    ->join('units','units.id','=','assets.unit')
+                    ->join('lines','lines.id','=','assets.line')
+                    ->select('assets.*','departments.department_name as departmentName', 
+                    'sections.section as sectionName','projects.projectName as projectName','units.unitName as unitName','lines.lineName as lineName',)
+                    ->get();
+
+                $response = [
+                    'success' => true,
+                    'data' => $result         
+                ];
+                $status = 201;   
+            }
+
+        }catch(Exception $e){
+                $response = [
+                    "error" => $e->getMessage(),
+                    "status" => 404
+                ];
+                $status = 404;    
+                   
+        }catch(QueryException $e){
+                $response = [
+                    "error" => $e->errorInfo,
+                ];
+                $status = 406; 
+        }
+
+        return response($response,$status);
+    }
 }

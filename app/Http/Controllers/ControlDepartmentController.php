@@ -2,32 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\assetMaster;
+use App\Models\controlDepartment;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
 use Illuminate\Database\QueryException;
 
-class AssetMasterController extends Controller
+class ControlDepartmentController extends Controller
 {
     public function store(Request $request)
     {
         try{
-            $data = DB::table('asset_masters')->where('assetMasterName','=',$request->assetMasterName)->get();
+            $data = DB::table('control_departments')->where('controlDepartment','=',$request->controlDepartment)->get();
 
             if(count($data)>0){
-                throw new Exception("this assetMasterName already exist");
+                throw new Exception("this controlDepartment already exist");
 
             }else{
-                $assetMaster = new assetMaster;
+                $controlDepartment = new controlDepartment;
 
-                $assetMaster->assetMasterName= $request->assetMasterName;
-                $assetMaster->description = $request->description;
+                $controlDepartment->controlDepartment= $request->controlDepartment;
+                $controlDepartment->description = $request->description;
 
-                $assetMaster->save();
+                $controlDepartment->save();
 
                 $response = [
-                    "message" => "assetMaster Added Sucessfully!",
+                    "message" => "controlDepartment Added Sucessfully!",
                     "status" => 200
                 ];
                 $status = 200;  
@@ -55,20 +55,20 @@ class AssetMasterController extends Controller
     public function update(Request $request,$id)
     {
         try{
-            $assetMaster = assetMaster::find($id);
+            $controlDepartment = controlDepartment::find($id);
 
-            if(!$assetMaster){
-                throw new Exception("assetMaster not found");
+            if(!$controlDepartment){
+                throw new Exception("controlDepartment not found");
 
             }else{
 
-                $assetMaster->assetMasterName = $request->assetMasterName;
-                $assetMaster->description = $request->description;
+                $controlDepartment->controlDepartment = $request->controlDepartment;
+                $controlDepartment->description = $request->description;
 
-                $assetMaster->save();
+                $controlDepartment->save();
 
                 $response = [       
-                "message" =>' assetMaster Updated Successfully', 
+                "message" =>' controlDepartment Updated Successfully', 
                 "status" => 200
                 ];
                 $status = 200;  
@@ -96,15 +96,15 @@ class AssetMasterController extends Controller
     public function destroy($id)
     { 
         try{
-            $assetMaster = assetMaster::find($id);
+            $controlDepartment = controlDepartment::find($id);
 
-            if(!$assetMaster){
-                throw new Exception("assetMaster not found");
+            if(!$controlDepartment){
+                throw new Exception("controlDepartment not found");
 
             }else{
-                $assetMaster->delete();
+                $controlDepartment->delete();
                 $response = [          
-                    "message" => " assetMaster Deleted Sucessfully!",
+                    "message" => " controlDepartment Deleted Sucessfully!",
                     "status" => 200
                 ];
                 $status = 200;     
@@ -132,15 +132,15 @@ class AssetMasterController extends Controller
     public function showData()
     {
         try{   
-            $assetMaster = assetMaster::all();
+            $controlDepartment = controlDepartment::all();
 
-            if(count($assetMaster)<=0){
-                throw new Exception("assetMaster not available");
+            if(count($controlDepartment)<=0){
+                throw new Exception("controlDepartment not available");
             }
 
             $response=[
-                "message" => "assetMaster List",
-                "data" => $assetMaster
+                "message" => "controlDepartment List",
+                "data" => $controlDepartment
             ];
             $status = 200; 
             

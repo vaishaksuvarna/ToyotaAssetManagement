@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('assetId');
             $table->bigInteger('department')->unsigned();
             $table->foreign('department')->references('id')->on('departments')->onDelete('cascade');
+            $table->bigInteger('controlDepartment')->unsigned();
+            $table->foreign('controlDepartment')->references('id')->on('control_departments')->onDelete('cascade');
+            $table->bigInteger('userDepartment')->unsigned();
+            $table->foreign('userDepartment')->references('id')->on('user_departments')->onDelete('cascade');
             $table->bigInteger('section')->unsigned();
             $table->foreign('section')->references('id')->on('sections')->onDelete('cascade');
             $table->string('assetName');
@@ -35,9 +39,14 @@ return new class extends Migration
             $table->string('yearOfMfg');
             $table->string('usedOrNew');
             $table->string('requesterName');
+            $table->bigInteger('requesterDepartment')->unsigned();
+            $table->foreign('requesterDepartment')->references('id')->on('requester_departments')->onDelete('cascade');
             $table->string('manufacturer');
             $table->string('description');
             $table->string('assetImage');
+            $table->string('fileUpload')->nullable();
+            $table->string('transfer')->nullable();
+            $table->string('allocated')->nullable();
             $table->timestamps();
         });
     }
