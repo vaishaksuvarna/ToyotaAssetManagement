@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Asset;
 use Exception;
 use Illuminate\Database\QueryException;
+use DB;
 use Str;
 use Storage;
 
@@ -106,14 +107,15 @@ class TransferAssetController extends Controller
     }  
 
     //To Get All The AssetID
-    public function getAssetId($id)
+    public function getAssetId()
     { 
         try{ 
 
             $result = DB::table('assets')->select('id','assetId')->get();
 
             if(count($result)<=0){
-                throw new Exception("data not found");
+                throw new Exception("data not available");
+
             }else{
                
                 $response = [
@@ -123,11 +125,19 @@ class TransferAssetController extends Controller
             }
 
         }catch(Exception $e){
+<<<<<<< HEAD
             $response = [
                 "message" => $e->getMessage(),
                 "status" => 404
             ];
             $status = 404;     
+=======
+                $response = [
+                    "message" => $e->getMessage(),
+                    "status" => 404
+                ];
+                $status = 404;      
+>>>>>>> 903c30987bc425a633fbf0427e463e608850efa8
 
         }catch(QueryException $e){
                 $response = [
@@ -146,11 +156,21 @@ class TransferAssetController extends Controller
 
             $result = DB::table('assets')->where('id','=',$id)->get();
 
-
             if(count($result)<=0){
                 throw new Exception("data not found");
             }else{
                
+                $result = DB::table('assets')
+                    ->where('assets.id','=',$id)
+                    ->join('departments','departments.id','=','assets.department')
+                    ->join('sections','sections.id','=','assets.section')
+                    ->join('projects','projects.id','=','assets.project')
+                    ->join('units','units.id','=','assets.unit')
+                    ->join('lines','lines.id','=','assets.line')
+                    ->select('assets.*','departments.department_name as departmentName', 
+                    'sections.section as sectionName','projects.projectName as projectName','units.unitName as unitName','lines.lineName as lineName',)
+                    ->get();
+
                 $response = [
                     'success' => true,
                     'data' => $result         
@@ -163,7 +183,8 @@ class TransferAssetController extends Controller
                     "error" => $e->getMessage(),
                     "status" => 404
                 ];
-                $status = 404;       
+                $status = 404;    
+                   
         }catch(QueryException $e){
                 $response = [
                     "error" => $e->errorInfo,
