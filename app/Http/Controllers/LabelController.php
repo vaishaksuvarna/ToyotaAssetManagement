@@ -48,12 +48,12 @@ class LabelController extends Controller
         }
         
         // BarCode
-        if($Label->code == 'barCode')
+        /*if($Label->code == 'barCode')
         {
         $name =  Str::random(10).'.png';;
         Storage::disk('public')->put("$name" ,base64_decode(DNS1DFacade::getBarcodePNG($getId, "C128",1.4,22)));
         $Label->codeGenerator =  '/storage/app/public/'.$name;
-        }
+        }*/
            
             $Label->save();
             

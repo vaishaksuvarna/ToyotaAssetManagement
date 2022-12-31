@@ -61,6 +61,7 @@ class AssetController extends Controller
             }else{
                 $asset = new Asset;
                     
+                $asset->autoAssetId = $this->autoAssetId($request);
                 $asset->assetId = $request->assetId;
                 $asset->department  = $request->department;
                 $asset->section = $request->section;
@@ -122,7 +123,7 @@ class AssetController extends Controller
     }
 
     //To generate default asset-id
-    public function assetId()
+    public function autoAssetId()
     {
         $last = DB::table('assets')->latest('id')->first();
 
@@ -133,14 +134,7 @@ class AssetController extends Controller
         }
         $get = "asset-".$user;
 
-        $response = [
-            'success' => true,
-            'data' =>  $get,
-            'status' => 201
-        ];
-        $status = 201;   
-
-        return Response($response,$status);
+        return $get;
     }
 
     //asset update
