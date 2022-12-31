@@ -13,7 +13,7 @@ use App\Http\Controllers\LabelController;
 use App\Http\Controllers\ScrapAssetController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AllocationController;
-use App\Http\Controllers\AssetMasterController;
+use App\Http\Controllers\AssetMasterShowController;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\TransferAssetController;
 use App\Http\Controllers\TagAssetController;
@@ -29,6 +29,10 @@ use App\Http\Controllers\UserModuleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\LineController;
+use App\Http\Controllers\AssetMasterController;
+use App\Http\Controllers\RequesterDepartmentController;
+use App\Http\Controllers\UserDepartmentController;
+use App\Http\Controllers\ControlDepartmentController;
 
 
 
@@ -124,6 +128,29 @@ Route::post('line/{id}/update', [LineController::class, 'update']);
 Route::post('line/{id}/delete', [LineController::class, 'destroy']);
 Route::get('line/showData', [LineController::class, 'showData']);
 
+//AssetMaster
+Route::post('assetMaster/add', [AssetMasterController::class, 'store']);
+Route::post('assetMaster/{id}/update', [AssetMasterController::class, 'update']);
+Route::post('assetMaster/{id}/delete', [AssetMasterController::class, 'destroy']);
+Route::get('assetMaster/showData', [AssetMasterController::class, 'showData']);
+
+//userDepartment
+Route::post('userDepartment/add', [UserDepartmentController::class, 'store']);
+Route::post('userDepartment/{id}/update', [UserDepartmentController::class, 'update']);
+Route::post('userDepartment/{id}/delete', [UserDepartmentController::class, 'destroy']);
+Route::get('userDepartment/showData', [UserDepartmentController::class, 'showData']);
+
+//controlDepartment
+Route::post('controlDepartment/add', [ControlDepartmentController::class, 'store']);
+Route::post('controlDepartment/{id}/update', [ControlDepartmentController::class, 'update']);
+Route::post('controlDepartment/{id}/delete', [ControlDepartmentController::class, 'destroy']);
+Route::get('controlDepartment/showData', [ControlDepartmentController::class, 'showData']);
+
+//RequesterDepartment
+Route::post('requesterDepartment/add', [RequesterDepartmentController::class, 'store']);
+Route::post('requesterDepartment/{id}/update', [RequesterDepartmentController::class, 'update']);
+Route::post('requesterDepartment/{id}/delete', [RequesterDepartmentController::class, 'destroy']);
+Route::get('requesterDepartment/showData', [RequesterDepartmentController::class, 'showData']);
 
 //Label
 Route::post('label/add',[LabelController::class,'store']);
@@ -171,9 +198,9 @@ Route::get('transferAsset/getAssetId', [TransferAssetController::class, 'getAsse
 Route::get('transferAsset/{id}/getAssetList', [TransferAssetController::class, 'getAssetList']);
 
 
-// AssetMaster
-Route::get('assetMaster/{id}/showData', [AssetMasterController::class, 'showData']);
-Route::get('assetMaster/{id}/export', [AssetMasterController::class, 'export']);
+// AssetMasterShow
+Route::get('assetMasterShow/{id}/showData', [AssetMasterShowController::class, 'showData']);
+Route::get('assetMasterShow/{id}/export', [AssetMasterShowController::class, 'export']);
 
 
 //GetData

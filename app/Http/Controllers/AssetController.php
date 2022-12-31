@@ -63,6 +63,8 @@ class AssetController extends Controller
                     
                 $asset->assetId = $request->assetId;
                 $asset->department  = $request->department;
+                $asset->controlDepartment  = $request->controlDepartment;
+                $asset->userDepartment  = $request->userDepartment;
                 $asset->section = $request->section;
                 $asset->assetName = $request->assetName;
                 $asset->financialAssetId = $request->financialAssetId;
@@ -75,7 +77,10 @@ class AssetController extends Controller
                 $asset->yearOfMfg = $request->yearOfMfg;
                 $asset->usedOrNew = $request->usedOrNew;
                 $asset->requesterName = $request->requesterName;
+                $asset->requesterDepartment  = $request->requesterDepartment;
                 $asset->manufacturer = $request->manufacturer;
+                $asset->manufacturerNo = $request->manufacturerNo;
+                $asset->weight = $request->weight;
                 $asset->description = $request->description;
         
                 //imageStoring assteImage
@@ -154,6 +159,8 @@ class AssetController extends Controller
 
             $asset->assetId = $request->assetId;
             $asset->department  = $request->department;
+            $asset->controlDepartment  = $request->controlDepartment;
+            $asset->userDepartment  = $request->userDepartment;
             $asset->section = $request->section;
             $asset->assetName = $request->assetName;
             $asset->financialAssetId = $request->financialAssetId;
@@ -166,7 +173,10 @@ class AssetController extends Controller
             $asset->yearOfMfg = $request->yearOfMfg;
             $asset->usedOrNew = $request->usedOrNew;
             $asset->requesterName = $request->requesterName;
+            $asset->requesterDepartment  = $request->requesterDepartment;
             $asset->manufacturer = $request->manufacturer;
+            $asset->manufacturerNo = $request->manufacturerNo;
+            $asset->weight = $request->weight;
             $asset->description = $request->description;
     
             //imageStoring assteImage

@@ -2,32 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\assetMaster;
+use App\Models\userDepartment;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
 use Illuminate\Database\QueryException;
 
-class AssetMasterController extends Controller
+class UserDepartmentController extends Controller
 {
     public function store(Request $request)
     {
         try{
-            $data = DB::table('asset_masters')->where('assetMasterName','=',$request->assetMasterName)->get();
+            $data = DB::table('user_departments')->where('userDepartment','=',$request->userDepartmentName)->get();
 
             if(count($data)>0){
-                throw new Exception("this assetMasterName already exist");
+                throw new Exception("this userDepartment already exist");
 
             }else{
-                $assetMaster = new assetMaster;
+                $userDepartment = new userDepartment;
 
-                $assetMaster->assetMasterName= $request->assetMasterName;
-                $assetMaster->description = $request->description;
+                $userDepartment->userDepartment= $request->userDepartment;
+                $userDepartment->description = $request->description;
 
-                $assetMaster->save();
+                $userDepartment->save();
 
                 $response = [
-                    "message" => "assetMaster Added Sucessfully!",
+                    "message" => "Data Added Sucessfully!",
                     "status" => 200
                 ];
                 $status = 200;  
@@ -55,20 +55,20 @@ class AssetMasterController extends Controller
     public function update(Request $request,$id)
     {
         try{
-            $assetMaster = assetMaster::find($id);
+            $userDepartment = userDepartment::find($id);
 
-            if(!$assetMaster){
-                throw new Exception("assetMaster not found");
+            if(!$userDepartment){
+                throw new Exception("userDepartment not found");
 
             }else{
 
-                $assetMaster->assetMasterName = $request->assetMasterName;
-                $assetMaster->description = $request->description;
+                $userDepartment->userDepartment= $request->userDepartment;
+                $userDepartment->description = $request->description;
 
-                $assetMaster->save();
+                $userDepartment->save();
 
                 $response = [       
-                "message" =>' assetMaster Updated Successfully', 
+                "message" =>' userDepartment Updated Successfully', 
                 "status" => 200
                 ];
                 $status = 200;  
@@ -96,15 +96,15 @@ class AssetMasterController extends Controller
     public function destroy($id)
     { 
         try{
-            $assetMaster = assetMaster::find($id);
+            $userDepartment = userDepartment::find($id);
 
-            if(!$assetMaster){
-                throw new Exception("assetMaster not found");
+            if(!$userDepartment){
+                throw new Exception("userDepartment not found");
 
             }else{
-                $assetMaster->delete();
+                $userDepartment->delete();
                 $response = [          
-                    "message" => " assetMaster Deleted Sucessfully!",
+                    "message" => " userDepartment Deleted Sucessfully!",
                     "status" => 200
                 ];
                 $status = 200;     
@@ -132,15 +132,15 @@ class AssetMasterController extends Controller
     public function showData()
     {
         try{   
-            $assetMaster = assetMaster::all();
+            $userDepartment = userDepartment::all();
 
-            if(count($assetMaster)<=0){
-                throw new Exception("assetMaster not available");
+            if(count($userDepartment)<=0){
+                throw new Exception("userDepartment not available");
             }
 
             $response=[
-                "message" => "assetMaster List",
-                "data" => $assetMaster
+                "message" => "userDepartment List",
+                "data" => $userDepartment
             ];
             $status = 200; 
             

@@ -125,20 +125,11 @@ class TransferAssetController extends Controller
             }
 
         }catch(Exception $e){
-<<<<<<< HEAD
-            $response = [
-                "message" => $e->getMessage(),
-                "status" => 404
-            ];
-            $status = 404;     
-=======
-                $response = [
+       $response = [
                     "message" => $e->getMessage(),
                     "status" => 404
                 ];
                 $status = 404;      
->>>>>>> 903c30987bc425a633fbf0427e463e608850efa8
-
         }catch(QueryException $e){
                 $response = [
                     "error" => $e->errorInfo,
