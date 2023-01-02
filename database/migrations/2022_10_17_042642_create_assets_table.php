@@ -42,6 +42,8 @@ return new class extends Migration
             $table->bigInteger('requesterDepartment')->unsigned();
             $table->foreign('requesterDepartment')->references('id')->on('requester_departments')->onDelete('cascade');
             $table->string('manufacturer');
+            $table->string('manufacturerNo')->nullable();
+            $table->string('weight')->nullable();
             $table->string('description');
             $table->string('assetImage');
             $table->string('fileUpload')->nullable();

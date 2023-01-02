@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\department;
 use App\Models\section;
+use App\Models\Allocation;
 use App\Models\assettype;
 use App\Models\Vendor;
 use App\Models\Asset;
@@ -38,7 +39,7 @@ class GetDataController extends Controller
             $response = [
                 "error"=>$e->getMessage(),
                 "status"=>406
-            ];            
+            ];             
             $status = 406;
 
         }catch(QueryException $e){
@@ -123,6 +124,7 @@ class GetDataController extends Controller
         return response($response,$status);
     }
     
+
     //To Fetch The AssetName
     public function getAssetName($id)
     { 
@@ -158,6 +160,7 @@ class GetDataController extends Controller
         return response($response,$status);
     }
 
+
     //Retrving All AssetName
     public function getMachine()
     {
@@ -177,6 +180,7 @@ class GetDataController extends Controller
                 ];
                 $status = 201;   
             }
+
  
         }catch(Exception $e){
             $response = [
@@ -195,6 +199,7 @@ class GetDataController extends Controller
          
         return response($response, $status);    
     }
+
 
     //Retrving All Vendor
     public function getVendor()
@@ -241,6 +246,7 @@ class GetDataController extends Controller
 
             if(!$VendorData){
                 throw new Exception("VendorData not found");
+
             }else{   
                 
                 $VendorData = DB::table('vendors')
@@ -256,6 +262,7 @@ class GetDataController extends Controller
                 $status = 201;   
             }
 
+
         }catch(Exception $e){
             $response = [
                 "error"=>$e->getMessage(),
@@ -270,6 +277,132 @@ class GetDataController extends Controller
             ];
             $status = 406; 
         }
-           return response($response, $status);    
+        
+        return response($response, $status);    
     }
+
+    //to get allocated departments
+    public function getAllocatedDepartment()
+    {
+        try{
+            $department = Allocation::all();
+
+            if(count($department)<=0){
+                throw new Exception("Departments not available");
+
+            }else{   
+                $department = DB::table('allocations')
+                        ->distinct('department')
+                        ->join('departments','departments.id','=','allocations.department')
+                        ->select('allocations.department','departments.department_name as departmentName')
+                        ->get();
+                
+                $response = [
+                    'success' => true,
+                    'data' => $department,
+                    'status' => 201
+                ];
+                $status = 201;   
+            }
+
+
+        }catch(Exception $e){
+            $response = [
+                "error"=>$e->getMessage(),
+                "status"=>406
+            ];            
+            $status = 406;
+
+        }catch(QueryException $e){
+            $response = [
+                "error" => $e->errorInfo,
+                "status"=>406
+            ];
+            $status = 406; 
+        }
+        
+        return response($response, $status);    
+    }
+
+
+    //to get allocated sections
+    public function getAlloactedSection( $id)
+    { 
+       try{ 
+            $section = DB::table('allocations')
+                 ->distinct('sections') 
+                 ->join('sections','sections.id','=','allocations.section')    
+                 ->where('allocations.department','=',$id)
+                 ->select('allocations.section','sections.section as sectionName')
+                 ->get();
+        
+            if(count($section)<=0){
+                throw new Exception("Sections not available");
+
+            }else{
+                
+                $response = [
+                    'success' => true,
+                    'data' => $section         
+                ];
+                $status = 201;   
+            }
+
+        }catch(Exception $e){
+            $response = [
+                "error" => $e->getMessage(),
+                "status" => 404
+            ];
+            $status = 404; 
+        
+        }catch(QueryException $e){
+            $response = [
+                "error" => $e->errorInfo,
+            ];
+            $status = 406; 
+        }
+
+        return response($response,$status);
+
+    }
+        
+       //To get alloacted assettypes
+       public function getAlloactedAssetType( $id)
+       { 
+           try{ 
+               $assetType = DB::table('allocations')
+                    ->distinct('assetType')
+                    ->where('allocations.section','=',$id)
+                    ->join('assettypes','assettypes.id','=','allocations.assetType')  
+                    ->select('allocations.assetType','assettypes.assetType as assetTypeName')
+                    ->get();
+           
+               if(count($assetType)<=0){
+                   throw new Exception("AssetType not available");
+               }else{
+   
+                   $response = [
+                       'success' => true,
+                       'data' => $assetType         
+                   ];
+                   $status = 201;   
+               }
+   
+
+            }catch(Exception $e){
+                $response = [
+                    "error" => $e->getMessage(),
+                    "status" => 404
+                ];
+                $status = 404;    
+    
+            }catch(QueryException $e){
+                $response = [
+                    "error" => $e->errorInfo,
+                ];
+                $status = 406; 
+            }   
+   
+           return response($response,$status);
+       }
 }

@@ -96,8 +96,6 @@ class AssetController extends Controller
                     Storage::disk('public')->put($imageName, base64_decode($image));
                     $asset->assetImage = $imagePath;
                 }
-
-                
             }
 
             $asset->save();
@@ -140,6 +138,31 @@ class AssetController extends Controller
         $get = "asset-".$user;
 
         return $get;
+    }
+
+    
+    //To generate default asset-id
+    public function id()
+    {
+        
+        $last = DB::table('assets')->latest()->first('id');
+        $id = $last->id;
+        $numlength = strlen((string)$id);
+ 
+        if(!$last){
+           $num["data"] = "00001";
+
+        }elseif($numlength == 1){
+            $num["data"] = "0000".$id + 1;
+        
+        }elseif($numlength == 2){
+            $num["data"] = "000".$id + 1;
+        
+        }elseif($numlength == 3){
+            $num["data"] = "00".$id + 1;
+        }
+       
+        return $num;
     }
 
     //asset update

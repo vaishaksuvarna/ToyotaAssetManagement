@@ -134,8 +134,13 @@ class AssetMasterController extends Controller
         try{   
             $assetMaster = assetMaster::all();
 
-            if(count($assetMaster)<=0){
+            if(!$assetMaster){
                 throw new Exception("assetMaster not available");
+
+            }else{
+
+                $assetMaster=DB::table('asset_masters')->select('id','assetMasterName')->get();
+
             }
 
             $response=[

@@ -15,18 +15,8 @@ return new class extends Migration
     {
         Schema::create('labels', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('department')->unsigned();
-            $table->foreign('department')->references('id')->on('departments')->onDelete('cascade');
-            $table->bigInteger('selectSection')->unsigned();
-            $table->foreign('selectSection')->references('id')->on('sections')->onDelete('cascade');
-            $table->bigInteger('assetType')->unsigned();
-            $table->foreign('assetType')->references('id')->on('assettypes')->onDelete('cascade');
-            $table->string('selectAssetType');
-            $table->bigInteger('selectAsset')->unsigned()->nullable();
-            $table->foreign('selectAsset')->references('id')->on('assets')->onDelete('cascade');
-            $table->string('selectAssetId')->nullable();
-            $table->string('code');
-            $table->string('codeGenerator');
+            $table->string('assetId');
+            $table->string('qrCode');
             $table->timestamps();
         });
     }

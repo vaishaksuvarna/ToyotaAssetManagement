@@ -17,53 +17,40 @@ class LabelController extends Controller
 {
     public function store(Request $request)
     {
+        try{
+            $asset = DB::table('assets')->where('id','=',$request->assetId)->get();   
+            $label = DB::table('assets')->where('id','=',$request->assetId)->get();  
+
+            if(count($asset)<=0){
+                throw new Exception("select existing AssetID");
+
+            }else if(count($label)>0){
+                throw new Exception("Qrcode is already generated to this Asset");
+
+            }else{        
+                $Label = new Label;
+
+                $get = DB::table('assets')->where('id','=',$request->assetId)->first();
+                $getId = $get->autoAssetId;
+
+                $Label->assetId = $get->assetId;
+
+                $filename =  Str::random(10).'.png';
+                $store =  storage_path().'/app/public/';
+                base64_encode(QrCode::format('png')->size(100)->generate($getId, $store.$filename));
+                $Label->qrCode =  '/storage/app/public/'.$filename;
+
+                $Label->save();
+                
+                $response = [
+                    'success' => true,
+                    'message' => "successfully added",
+                    'status' => 201
+                ];
+                $status = 201;   
+            }
 
 
-       try{                
-        $Label = new Label;
-         
-        $Label->department  = $request->department ;
-        $Label->selectSection = $request->selectSection;
-        $Label->assetType = $request->assetType;
-        $Label->selectAssetType = $request->selectAssetType;
-
-        if($Label->selectAssetType == 'asset'){
-            $Label->selectAsset = $request->selectAsset;
-            $getId = $this->assetGetId($request);
-        } 
-
-        if($Label->selectAssetType == 'assetId'){
-            $Label->selectAssetId = $request->selectAssetId;
-            $getId = $request->selectAssetId;
-        }
-        $Label->code = $request->code; 
-        
-        // QrCode
-        if($Label->code == 'qrCode')
-        {
-            $filename =  Str::random(10).'.png';
-            $store =  storage_path().'/app/public/';
-            base64_encode(QrCode::format('png')->size(100)->generate($getId, $store.$filename));
-            $Label->codeGenerator =  '/storage/app/public/'.$filename;
-        }
-        
-        // BarCode
-        /*if($Label->code == 'barCode')
-        {
-        $name =  Str::random(10).'.png';;
-        Storage::disk('public')->put("$name" ,base64_decode(DNS1DFacade::getBarcodePNG($getId, "C128",1.4,22)));
-        $Label->codeGenerator =  '/storage/app/public/'.$name;
-        }*/
-           
-            $Label->save();
-            
-            $response = [
-                'success' => true,
-                'message' => "successfully added",
-                'status' => 201
-            ];
-            $status = 201;   
-          
         }catch(Exception $e){
             $response = [
                 "error"=>$e->getMessage(),
@@ -80,8 +67,8 @@ class LabelController extends Controller
         } 
 
         return response($response, $status);        
-
     }
+
 
     public function assetGetId(Request $request)
     { 
@@ -97,13 +84,12 @@ class LabelController extends Controller
     public function showData(Label $Label)
     {
         try{
-         
-                $Label = DB::table('labels')
-                ->join('departments','departments.id','=','labels.department')
-                ->join('sections','sections.id','=','labels.selectSection')
-                ->leftjoin('assets','assets.id','=','labels.selectAsset')
-                ->select('labels.*','labels.id','departments.department_name as department', 
-                    'sections.section as selectSection','assets.assetName as selectAsset','labels.selectAssetId','codeGenerator','labels.created_at as date')
+            $Label = DB::table('labels')
+                ->join('assets','assets.assetId','=','labels.assetId')
+                ->join('departments','departments.id','=','assets.department')
+                ->join('sections','sections.id','=','assets.section')
+                ->join('assettypes','assettypes.id','=','assets.assetType')
+                ->select('labels.assetId','assets.assetName as assetName','departments.department_name as department','sections.section as section','assettypes.assetType as assetType','labels.created_at')
                 ->get();
                 
                 $response = [
@@ -112,26 +98,26 @@ class LabelController extends Controller
                 ];
                 $status = 201;   
           
-            }catch(Exception $e){
+        }catch(Exception $e){
 
-                $response = [
-                    "error" => $e->getMessage(),
-                    "status" => 404
-                ];
-                $status = 404; 
+            $response = [
+                "error" => $e->getMessage(),
+                "status" => 404
+            ];
+            $status = 404; 
              
-            }catch(QueryException $e){
-                $response = [
-                    "error" => $e->errorInfo,
-                    "status"=>406
-                ];
-                $status = 406; 
-            }
+        }catch(QueryException $e){
+            $response = [
+                "error" => $e->errorInfo,
+                "status"=>406
+            ];
+            $status = 406; 
+        }            
      
-            return response($response,$status);
-     
-        }
+        return response($response,$status);
+    }    
 
+    
     public function showLabel($id)
     {
  
