@@ -139,7 +139,7 @@ class AssetMasterController extends Controller
 
             }else{
 
-                $assetMaster=DB::table('asset_masters')->select('id','assetMasterName')->get();
+                $assetMaster=DB::table('asset_masters')->get();
 
             }
 

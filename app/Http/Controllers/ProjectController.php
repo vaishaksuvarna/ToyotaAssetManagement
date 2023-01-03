@@ -24,6 +24,7 @@ class ProjectController extends Controller
 
                 $project->projectName= $request->projectName;
                 $project->description= $request->description;
+                $project->status = $request->status;
 
                 $project->save();
 
@@ -65,6 +66,7 @@ class ProjectController extends Controller
 
                 $project->projectName = $request->projectName;
                 $project->description = $request->description;
+                $project->status = $request->status;
 
                 $project->save();
 

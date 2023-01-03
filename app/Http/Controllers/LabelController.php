@@ -18,11 +18,11 @@ class LabelController extends Controller
     public function store(Request $request)
     {
         try{
-            $asset = DB::table('assets')->where('id','=',$request->assetId)->get();   
-            $label = DB::table('assets')->where('id','=',$request->assetId)->get();  
+            $asset = DB::table('assets')->where('assetId','=',$request->assetId)->get();   
+            $label = DB::table('labels')->where('assetId','=',$request->assetId)->get();  
 
             if(count($asset)<=0){
-                throw new Exception("select existing AssetID");
+                throw new Exception("AssetID is invalid");
 
             }else if(count($label)>0){
                 throw new Exception("Qrcode is already generated to this Asset");
@@ -30,15 +30,17 @@ class LabelController extends Controller
             }else{        
                 $Label = new Label;
 
-                $get = DB::table('assets')->where('id','=',$request->assetId)->first();
+                $get = DB::table('assets')->where('assetId','=',$request->assetId)->first();
                 $getId = $get->autoAssetId;
 
-                $Label->assetId = $get->assetId;
+                $Label->assetId = $request->assetId;
 
                 $filename =  Str::random(10).'.png';
-                $store =  storage_path().'/app/public/';
+                //$store =  storage_path().'/app/public/';
+                $store = public_path().'/images/';
                 base64_encode(QrCode::format('png')->size(100)->generate($getId, $store.$filename));
-                $Label->qrCode =  '/storage/app/public/'.$filename;
+                // $Label->qrCode =  '/storage/app/public/'.$filename;
+                $Label->qrCode =  '/images/'.$filename;
 
                 $Label->save();
                 
@@ -89,7 +91,7 @@ class LabelController extends Controller
                 ->join('departments','departments.id','=','assets.department')
                 ->join('sections','sections.id','=','assets.section')
                 ->join('assettypes','assettypes.id','=','assets.assetType')
-                ->select('labels.assetId','assets.assetName as assetName','departments.department_name as department','sections.section as section','assettypes.assetType as assetType','labels.created_at')
+                ->select('labels.id','labels.assetId','assets.assetName as assetName','departments.department_name as department','sections.section as section','assettypes.assetType as assetType','labels.created_at')
                 ->get();
                 
                 $response = [
@@ -128,27 +130,14 @@ class LabelController extends Controller
                 throw new Exception("data not found");
 
             }else{
-                $Label = DB::table('labels')->where('labels.id','=',$id)->first();
-                $Label = $Label->selectAssetType;
-
-                if($Label == "asset")
-                {
-                    $Label = DB::table('labels')->where('labels.id','=',$id)
-                        ->join('departments','departments.id','=','labels.department')
-                        ->join('sections','sections.id','=','labels.selectSection')
-                        ->join('assets','assets.id','=','labels.selectAsset')
-                        ->select('labels.*','labels.id','departments.department_name as department', 
-                            'sections.section as selectSection','assets.assetName as selectAsset','codeGenerator','labels.created_at as date')
-                        ->get();
-                }
-                else{
-                    $Label = DB::table('labels')->where('labels.id','=',$id)
-                    ->join('departments','departments.id','=','labels.department')
-                    ->join('sections','sections.id','=','labels.selectSection')
-                    ->select('labels.*','labels.id','departments.department_name as department', 
-                        'sections.section as selectSection','codeGenerator','labels.created_at as date')
+                $Label = DB::table('labels')
+                    ->join('assets','assets.assetId','=','labels.assetId')
+                    ->join('departments','departments.id','=','assets.department')
+                    ->join('sections','sections.id','=','assets.section')
+                    ->join('assettypes','assettypes.id','=','assets.assetType')
+                    ->where('labels.id','=',$id)
+                    ->select('labels.id','labels.assetId','assets.assetName as assetName','departments.department_name as department','sections.section as section','assettypes.assetType as assetType','labels.qrCode','labels.created_at')
                     ->get();
-                }
 
                 $response = [
                     'data' => $Label         
