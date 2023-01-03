@@ -81,6 +81,7 @@ class TransferAssetController extends Controller
                 }
             
                 $asset->save();
+                
                 $response = [
                     "massage" => "transfered successfully",
                     "status" => 200
@@ -125,11 +126,12 @@ class TransferAssetController extends Controller
             }
 
         }catch(Exception $e){
-       $response = [
-                    "message" => $e->getMessage(),
-                    "status" => 404
-                ];
-                $status = 404;      
+            $response = [
+                "message" => $e->getMessage(),
+                "status" => 404
+            ];
+            $status = 404;            
+                           
         }catch(QueryException $e){
                 $response = [
                     "error" => $e->errorInfo,

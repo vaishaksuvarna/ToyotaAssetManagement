@@ -23,6 +23,7 @@ class LineController extends Controller
 
                 $line->lineName= $request->lineName;
                 $line->description= $request->description;
+                $line->status = $request->status;
 
                 $line->save();
 
@@ -63,6 +64,7 @@ class LineController extends Controller
 
             $line->lineName = $request->lineName;
             $line->description = $request->description;
+            $line->status = $request->status;
 
             $line->save();
 

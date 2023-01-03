@@ -84,9 +84,10 @@ Route::post('asset/add', [AssetController::class, 'store']);
 Route::post('asset/{id}/update', [AssetController::class, 'update']);
 Route::post('asset/{id}/delete', [AssetController::class, 'destroy']);
 Route::get('asset/showData', [AssetController::class, 'showData']);
-Route::get('asset/assetId', [AssetController::class, 'assetId']);
+Route::get('asset/autoAssetId', [AssetController::class, 'autoAssetId']);
 Route::post('asset/import', [AssetController::class, 'import']);
 Route::get('asset/template', [AssetController::class, 'template']);
+Route::get('asset/id', [AssetController::class, 'id']);
 
 
 //Department
@@ -211,6 +212,9 @@ Route::get('getAssetName/{id}', [GetDataController::class, 'getAssetName']);
 Route::get('getMachine', [GetDataController::class, 'getMachine']);
 Route::get('getVendor', [GetDataController::class, 'getVendor']);
 Route::get('getVendorData/{id}', [GetDataController::class, 'getVendorData']);
+Route::get('getAllocatedDepartment', [GetDataController::class, 'getAllocatedDepartment']);
+Route::get('getAlloactedSection/{id}', [GetDataController::class, 'getAlloactedSection']);
+Route::get('getAlloactedAssetType/{id}', [GetDataController::class, 'getAlloactedAssetType']);
 
 
 //TagAsset

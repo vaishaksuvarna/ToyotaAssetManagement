@@ -24,6 +24,7 @@ class UnitController extends Controller
 
                 $unit->unitName= $request->unitName;
                 $unit->description= $request->description;
+                $unit->status = $request->status;
 
                 $unit->save();
 
@@ -65,6 +66,7 @@ class UnitController extends Controller
 
             $unit->unitName = $request->unitName;
             $unit->description = $request->description;
+            $unit->status = $request->status;
 
             $unit->save();
 
