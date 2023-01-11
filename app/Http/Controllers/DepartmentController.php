@@ -16,8 +16,8 @@ class DepartmentController extends Controller
         try{
 
             $department = new department;
-
-            $department->department_name= $request->department_name;
+            $department->unitPlant= $request->unitPlant;
+            $department->departmentName= $request->departmentName;
             $department->description= $request->description;
 
             $department->save();
@@ -56,8 +56,8 @@ class DepartmentController extends Controller
             if(!$department){
                 throw new Exception("department not found");
             }
-
-            $department->department_name = $request->department_name;
+            $department->unitPlant= $request->unitPlant;
+            $department->departmentName= $request->departmentName;
             $department->description = $request->description;
 
             $department->save();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\unit;
 use App\Models\department;
 use App\Models\section;
 use App\Models\Allocation;
@@ -15,18 +16,55 @@ use Illuminate\Database\QueryException;
 
 class GetDataController extends Controller
 {
-    //Retrving All Departments  
-    public function getDepartment()
+    //Retrving all Units
+    public function getUnit()
     {
         try{
-            $department = department::all();
+            $unit = unit::all();
 
-            if(!$department){
-                throw new Exception("department not found");
+            if(!$unit){
+                throw new Exception("unit not found");
             }else{   
 
-                $department=DB::table('departments')->select('id','department_name')->get();
+                $unit=DB::table('units')->select('id','unitName')->get();
                 
+                $response = [
+                    'success' => true,
+                    'data' => $unit,
+                    'status' => 201
+                ];
+                $status = 201;   
+            }
+
+        }catch(Exception $e){
+            $response = [
+                "error"=>$e->getMessage(),
+                "status"=>406
+            ];             
+            $status = 406;
+
+        }catch(QueryException $e){
+            $response = [
+                "error" => $e->errorInfo,
+                "status"=>406
+            ];
+            $status = 406; 
+        }
+        
+        return response($response, $status);    
+    }
+
+    //Retrving All Departments  
+    public function getDepartment($id)
+    {
+        try{
+            $department=DB::table('departments')->where('unitPlant','=',$id)->get();
+
+            if(count($department)<=0){
+                throw new Exception("data not found");
+
+            }else{
+
                 $response = [
                     'success' => true,
                     'data' => $department,

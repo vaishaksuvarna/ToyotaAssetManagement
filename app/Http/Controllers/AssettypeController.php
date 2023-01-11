@@ -15,6 +15,8 @@ class AssettypeController extends Controller
         try{
             
             $assettype = new assettype;
+
+            $department->unitPlant= $request->unitPlant;
             $assettype->department= $request->department;
             $assettype->section= $request->section;
             $assettype->assetType= $request->assetType;
@@ -55,6 +57,8 @@ class AssettypeController extends Controller
             if(!$assettype){
                 throw new Exception("Asset Type not found");
             }
+            
+            $department->unitPlant= $request->unitPlant;
             $assettype->department= $request->department;
             $assettype->section= $request->section;
             $assettype->assetType= $request->assetType;

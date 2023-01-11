@@ -61,10 +61,10 @@ class TransferAssetController extends Controller
                 }else{
                     $asset->transfer = 0;
                 }
-                $asset->unit = $request->unit;
-                $asset->project = $request->project;
                 $asset->department = $request->department;
                 $asset->section = $request->section;
+                $asset->unit = $request->unit;
+                $asset->project = $request->project;
                 $asset->line = $request->line;
                 $asset->remarks = $request->remarks;
 
@@ -80,7 +80,7 @@ class TransferAssetController extends Controller
                     $asset->fileUpload = $imagePath;
                 }
             
-                $asset->save();
+                $asset->update();
                 
                 $response = [
                     "massage" => "transfered successfully",

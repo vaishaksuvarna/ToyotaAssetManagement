@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('unitPlant')->unsigned();
+            $table->foreign('unitPlant')->references('id')->on('units')->onDelete('cascade');
             $table->bigInteger('department')->unsigned();
             $table->foreign('department')->references('id')->on('departments')->onDelete('cascade');
             $table->string('section');
