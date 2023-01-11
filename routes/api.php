@@ -174,7 +174,8 @@ Route::post('audit/{id}/delete', [AuditController::class, 'destroy']);
 Route::get('audit/showData', [AuditController::class, 'showData']);
 Route::post('audit/{id}/viewAuditReport', [AuditController::class, 'viewAuditReport']);
 Route::get('audit/{id}/export', [AuditController::class, 'export']);
-
+Route::post('getAssetDetails', [AuditController::class, 'getAssetDetails']);
+Route::get('getAuditList', [AuditController::class, 'getAuditList']);
 
 //Allocation
 Route::post('allocation/add', [AllocationController::class, 'store']);
@@ -205,7 +206,8 @@ Route::get('assetMasterShow/{id}/export', [AssetMasterShowController::class, 'ex
 
 
 //GetData
-Route::get('getDepartment', [GetDataController::class, 'getDepartment']);
+Route::get('getUnit', [GetDataController::class, 'getUnit']); 
+Route::get('getDepartment/{id}', [GetDataController::class, 'getDepartment']);
 Route::get('getSection/{id}', [GetDataController::class, 'getSection']);
 Route::get('getAssetType/{id}', [GetDataController::class, 'getAssetType']);
 Route::get('getAssetName/{id}', [GetDataController::class, 'getAssetName']);

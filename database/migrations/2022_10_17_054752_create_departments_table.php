@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            $table->string('department_name');
+            $table->bigInteger('unitPlant')->unsigned();
+            $table->foreign('unitPlant')->references('id')->on('units')->onDelete('cascade');
+            $table->string('departmentName');
             $table->text('description');
             $table->timestamps();
         });

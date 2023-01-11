@@ -22,7 +22,7 @@ class UnitController extends Controller
             else{
                 $unit = new unit;
 
-                $unit->unitName= $request->unitName;
+                $unit->unitPlant= $request->unitPlant;
                 $unit->description= $request->description;
                 $unit->status = $request->status;
 
@@ -64,7 +64,7 @@ class UnitController extends Controller
                 throw new Exception("unit not found");
             }
 
-            $unit->unitName = $request->unitName;
+            $unit->unitPlant= $request->unitPlant;
             $unit->description = $request->description;
             $unit->status = $request->status;
 

@@ -620,18 +620,18 @@ class AMCController extends Controller
         return response($response,$status); 
     }
     
-    //To Display The Amc data with in end of 7 days
+    //To Display The Amc data which are closed to due date
     public function viewAmcRenewal()
     {
         try{
 
             $result=DB::table('amcs')
                     ->whereBetween('periodTo', [now(), now()->addDays(7)])
-                    ->join('departments','departments.id','=','amcs.department')
-                    ->join('assets','assets.id','=','amcs.assetName')
-                    ->select( 'amcs.id','departments.department_name as department', 
-                     'assets.assetName as  machineName',
-                     'periodFrom as amcStartDate','periodTo as amcEndDate')
+                    // ->join('departments','departments.id','=','amcs.department')
+                    // ->join('assets','assets.id','=','amcs.assetName')
+                    // ->select( 'amcs.id','departments.department_name as department', 
+                    //  'assets.assetName as  machineName',
+                    //  'periodFrom as amcStartDate','periodTo as amcEndDate')
                     ->get();
                 
                 if(count($result)<=0){

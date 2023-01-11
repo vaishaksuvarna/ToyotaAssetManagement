@@ -15,7 +15,6 @@ class AuditController extends Controller
     public function store(Request $request)
     {
         try{  
-
             $audit = new Audit;
 
             $audit->auditDate  = $request->auditDate ;
@@ -231,5 +230,32 @@ class AuditController extends Controller
             ->get();
   
         return Excel::download(new AuditExport($query), 'Audit.xlsx');
+    }
+
+
+    /*******************************************************/
+
+    public function getAssetDetails(Request $request)
+    {
+        $autoAssetId = $request->assetId;
+        $data = DB::table('assets')->where('autoAssetId','=',$autoAssetId)->get();
+        $response["data"] = $data;
+
+        return $response;
+    }
+
+    public function getAuditList()
+    {
+        $result=DB::table('audits')
+        ->whereBetween('auditDate', [now(), now()->addDays(7)])
+        ->join('departments','departments.id','=','audits.department')
+        ->join('assettypes','assettypes.id','=','audits.assettype')
+        ->join('sections','sections.id','=','audits.section')
+        ->select('audits.*','departments.department_name as department', 'assettypes.assetType as assetType','sections.section as section' 
+         )
+        ->get();
+        $response["data"] = $result;
+        
+        return $response;
     }
 }

@@ -15,6 +15,8 @@ class SectionController extends Controller
     {
         try{
             $section = new section;
+
+            $department->unitPlant= $request->unitPlant;
             $section->department= $request->department;
             $section->section= $request->section;
 
@@ -53,7 +55,8 @@ class SectionController extends Controller
             if(!$section){
                 throw new Exception("section not found");
             }
-
+            
+            $department->unitPlant= $request->unitPlant;
             $section->department= $request->department;
             $section->section= $request->section;
 
