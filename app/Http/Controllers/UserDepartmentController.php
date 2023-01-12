@@ -136,13 +136,16 @@ class UserDepartmentController extends Controller
 
             if(count($userDepartment)<=0){
                 throw new Exception("userDepartment not available");
-            }
 
-            $response=[
-                "message" => "userDepartment List",
-                "data" => $userDepartment
-            ];
-            $status = 200; 
+            }else{
+                $userDepartment = DB::table('user_departments')->select('user_departments.*','user_departments.id as userDepartmentId')->get();
+
+                $response=[
+                    "message" => "userDepartment List",
+                    "data" => $userDepartment
+                ];
+                $status = 200; 
+            }
             
 
         }catch(Exception $e){

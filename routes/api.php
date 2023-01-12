@@ -178,7 +178,8 @@ Route::post('getAssetDetails', [AuditController::class, 'getAssetDetails']);
 Route::get('getAuditList', [AuditController::class, 'getAuditList']);
 
 //Allocation
-Route::post('allocation/add', [AllocationController::class, 'store']);
+// Route::post('allocation/add', [AllocationController::class, 'store']);
+Route::post('allocation/{id}/add', [AllocationController::class, 'store']);
 Route::post('allocation/{id}/update', [AllocationController::class, 'update']);
 Route::post('allocation/showData', [AllocationController::class, 'showData']);
 Route::get('allocation/getEmpId',[AllocationController::class, 'getEmpId']);
@@ -206,7 +207,10 @@ Route::get('assetMasterShow/{id}/export', [AssetMasterShowController::class, 'ex
 
 
 //GetData
-Route::get('getUnit', [GetDataController::class, 'getUnit']); 
+Route::get('getrequesterDepartment', [GetDataController::class, 'getrequesterDepartment']); 
+Route::get('getLine/{id}', [GetDataController::class, 'getLine']); 
+
+Route::get('getUnitPlant', [GetDataController::class, 'getUnit']); 
 Route::get('getDepartment/{id}', [GetDataController::class, 'getDepartment']);
 Route::get('getSection/{id}', [GetDataController::class, 'getSection']);
 Route::get('getAssetType/{id}', [GetDataController::class, 'getAssetType']);

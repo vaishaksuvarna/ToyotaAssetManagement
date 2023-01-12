@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('lines', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('unitPlant')->unsigned();
+            $table->foreign('unitPlant')->references('id')->on('units')->onDelete('cascade');
             $table->string('lineName');
             $table->string('description');
             $table->timestamps();

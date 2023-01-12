@@ -10,62 +10,83 @@ use App\Exports\AllocationExport;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use Exception;
+use Str;
+use Storage;
 use Illuminate\Database\QueryException;
 
 class AllocationController extends Controller
 {
-    public function store(Request $request)
+      // to get extension 
+      public function getExtension($image)
+      {
+          $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+          if ($extension == 'jpg') {
+              $response = 'jpg';
+  
+          } elseif ($extension == 'png') {
+              $response = 'png';
+  
+          } elseif ($extension == 'jpeg') {
+              $response = 'jpeg';
+              
+          } elseif ($extension == 'csv') {
+              $response = 'csv';
+  
+          } else {
+  
+              $extension1 = explode(";", $image)[0];
+              $x = explode(".", $extension1)[3];
+              if ($x == 'document') {
+                  $response = "docx";
+              } elseif ($x == 'sheet') {
+                  $response = "xlsx";
+              } else {
+                  $response = $extension;
+              }
+          }
+  
+          return $response;
+      }
+
+    public function store(Request $request,$id)
     {
         try{
-            $assetName = $request->assetName;
-            $data = DB::table('allocations')->where('assetName','=',$assetName)->get();
+            $asset = Asset::find($id);
 
-            if(count($data)>0){
-                throw new Exception("This asset has already been Allocated.");
+            $asset->assetNo  = $request->assetNo ;
+            $asset->unitPlant = $request->unitPlant;
+            $asset->line = $request->line;
+            $asset->yearOfMfg = $request->yearOfMfg;
+            $asset->countryOfMfg  = $request->countryOfMfg ;
+            $asset->yearOfInstallTKAP = $request->yearOfInstallTKAP;
+            $asset->usedOrNew = $request->usedOrNew;
+            $asset->usagecode = $request->usagecode;
+            $asset->assetWeight  = $request->assetWeight ;
+            $asset->controlDepartment = $request->controlDepartment;
+            $asset->userDepartment = $request->userDepartment;
+            $asset->section = $request->section;
 
-            }else{
-                $allocation = new Allocation;
+            $image = $request->assetImage;  // your base64 encoded
+            if($image){
+                $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1]; 
+                $replace = substr($image, 0, strpos($image, ',')+1); 
+                $image = str_replace($replace, '', $image); 
+                $image = str_replace(' ', '+', $image); 
+                $imageName = Str::random(10).'.'.$extension;
+                $imagePath = '/storage'.'/'.$imageName;
+                Storage::disk('public')->put($imageName, base64_decode($image));
 
-                $allocation->department = $request->department;
-                $allocation->section  = $request->section ;
-                $allocation->assetType = $request->assetType;
-                $allocation->assetName = $request->assetName;
-                $allocation->userType = $request->userType;
-                
-                if($allocation->userType == 'empId'){
-                    $allocation->empId = $request->empId;
-                }
-
-                $allocation->user = $this->getUserId($request);
-
-                if($allocation->userType == 'department'){
-                    $allocation->userDepartment = $request->userDepartment;
-                }
-                $allocation->position = $request->position;
-                if($allocation->position == 'temporary'){
-                    $allocation->fromDate = $request->fromDate;
-                    $allocation->toDate = $request->toDate; 
-                }
-                if($allocation->position == 'permanent'){
-                    $allocation->fromDate = null;
-                    $allocation->toDate =  null;
-                }
-                $allocation->returnStatus = "inUse"; 
-
-                $assetName = $request->assetName;
-                $asset = DB::table('assets')->where('id','=',$assetName)->first();
-                
-                    $asset = Asset::find($assetName);
-                    $asset->allocated = 1;
-                    $asset->save();
-                
-             
-                $allocation->save();
+                $asset->assetImage = $imagePath;
             }
+
+            $asset->mfgSlNo = $request->mfgSlNo;
+            $asset->status = $request->status;
+           
+            $asset->save();
 
             $response = [
                 'success' => true,
-                'message' => "successfully added",
+                'message' => "successfully updated",
                 'status' => 201
             ];
             $status = 201;   
@@ -79,7 +100,7 @@ class AllocationController extends Controller
 
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status" => 406
             ];
             $status = 406;             
@@ -141,13 +162,13 @@ class AllocationController extends Controller
 
         }catch(Exception $e){
             $response = [
-                "error"=>$e->getMessage(),
+                "message"=>$e->getMessage(),
             ];            
             $status = 406;
 
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
             ];
             $status = 406; 
         }
@@ -317,7 +338,7 @@ class AllocationController extends Controller
             
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status" => 406
             ];
             $status = 406; 

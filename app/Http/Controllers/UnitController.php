@@ -14,10 +14,10 @@ class UnitController extends Controller
     public function store(Request $request)
     {
         try{
-            $unit = DB::table('units')->where('unitName','=',$request->unitName)->get();
+            $unit = DB::table('units')->where('unitPlant','=',$request->unitPlant)->get();
 
             if(count($unit)>0){
-                throw new Exception("unitName already exists");
+                throw new Exception("Unit/Plant already exists");
             }
             else{
                 $unit = new unit;
@@ -29,7 +29,7 @@ class UnitController extends Controller
                 $unit->save();
 
                 $response = [
-                    "message" => "New Unit Added Sucessfully!",
+                    "message" => "New Unit/Plant Added Sucessfully!",
                     "status" => 200
                 ];
                 $status = 200;  
@@ -44,7 +44,7 @@ class UnitController extends Controller
 
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status" => 406
             ];
             $status = 406;             
@@ -61,7 +61,7 @@ class UnitController extends Controller
             $unit = unit::find($id);
 
             if(!$unit){
-                throw new Exception("unit not found");
+                throw new Exception("Unit/Plant not found");
             }
 
             $unit->unitPlant= $request->unitPlant;
@@ -86,7 +86,7 @@ class UnitController extends Controller
 
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status" => 406
             ];
             $status = 406; 
@@ -124,7 +124,7 @@ class UnitController extends Controller
 
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status" => 406
             ];
             $status = 406; 
