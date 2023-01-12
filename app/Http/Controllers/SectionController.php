@@ -16,9 +16,9 @@ class SectionController extends Controller
         try{
             $section = new section;
 
-            $department->unitPlant= $request->unitPlant;
-            $section->department= $request->department;
+           
             $section->section= $request->section;
+            $section->description= $request->description;
 
             $section->save();
             
@@ -55,10 +55,9 @@ class SectionController extends Controller
             if(!$section){
                 throw new Exception("section not found");
             }
-            
-            $department->unitPlant= $request->unitPlant;
-            $section->department= $request->department;
+          
             $section->section= $request->section;
+            $section->description= $request->description;
 
             $section->save();
 
@@ -68,21 +67,22 @@ class SectionController extends Controller
             ];
             $status = 200;  
 
-            }catch(Exception $e){ 
-               $response = [
-                   "message"=>$e->getMessage(),
-                   "status" => 406
-                ];            
-               $status = 200;
-            }catch(QueryException $e){
-               $response = [
-                   "error" => $e->errorInfo,
-                   "status" => 406
-                ];
-               $status = 406; 
-            }
+        }catch(Exception $e){ 
+            $response = [
+                "message"=>$e->getMessage(),
+                "status" => 406
+             ];            
+            $status = 200;
 
-            return response($response,$status);
+        }catch(QueryException $e){
+            $response = [
+                "error" => $e->errorInfo,
+                "status" => 406
+             ];
+            $status = 406; 
+        }
+
+        return response($response,$status);
     } 
 
 
@@ -123,10 +123,10 @@ class SectionController extends Controller
     {
         try{    
 
-            $result = DB::table('sections')
-                ->join('departments','departments.id','=','sections.department')
-                ->select('sections.*','departments.department_name as department','departments.id as departmentId')
-                ->get();
+            $result = section :: all();
+                // ->join('departments','departments.id','=','sections.department')
+                // ->select('sections.*','departments.department_name as department','departments.id as departmentId')
+                // ->get();
             if(!$result){
                 throw new Exception("section not found");
             }

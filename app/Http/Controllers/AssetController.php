@@ -61,7 +61,8 @@ class AssetController extends Controller
             }else{
                 $asset = new Asset;
                     
-                $asset->assetId = $request->assetId;
+                $asset->assetId = $this->autoAssetId($request);
+                $asset->assetNo = $request->assetNo;
                 $asset->projectName  = $request->projectName;
                 $asset->requesterDepartment  = $request->requesterDepartment;
                 $asset->unitPlant = $request->unitPlant;
@@ -73,36 +74,18 @@ class AssetController extends Controller
                 $asset->equipmentType  = $request->equipmentType;
                 $asset->dateOfRequest = $request->dateOfRequest;
                 $asset->requesterName = $request->requesterName;
-    
-                $asset->department  = $request->department;
-                $asset->controlDepartment  = $request->controlDepartment;
-                $asset->userDepartment  = $request->userDepartment;
-                $asset->section = $request->section;
-                $asset->financialAssetId = $request->financialAssetId;
-                $asset->assetType = $request->assetType;
-                $asset->usagecode = $request->usagecode;
-                $asset->yearOfMfg = $request->yearOfMfg;
-                $asset->usedOrNew = $request->usedOrNew;
-                $asset->manufacturer = $request->manufacturer;
-                $asset->manufacturerNo = $request->manufacturerNo;
-                $asset->weight = $request->weight;
-                $asset->description = $request->description;
-                $asset->countryOfMfg = $request->countryOfMfg;
-    
-        
-                // //imageStoring assteImage
-                // $image = $request->assetImage;
-                // if($image){  // your base64 encoded
-                //     $extension = $this->getExtension($image);
-                //     $replace = substr($image, 0, strpos($image, ',')+1); 
-                //     $image = str_replace($replace, '', $image); 
-                //     $image = str_replace(' ', '+', $image); 
-                //     $imageName = Str::random(10).'.'.$extension;
-                //     $imagePath = '/storage/app/public/'.$imageName;
-                //     Storage::disk('public')->put($imageName, base64_decode($image));
-                //     $asset->assetImage = $imagePath;
-                // }
-                // $asset->status = $request->status;
+                $asset->yearOfMfg = "NA";
+                $asset->countryOfMfg = "NA";
+                $asset->yearOfInstallTKAP = "NA";
+                $asset->usedOrNew = "NA";
+                $asset->usagecode = "NA";
+                $asset->assetWeight = "NA";
+                $asset->controlDepartment  = "NA";
+                $asset->userDepartment  = "NA";
+                $asset->section = "NA";
+                $asset->assetImage = "NA";
+                $asset->mfgSlNo = "NA";
+                $asset->status = "NA";
             }
 
             $asset->save();
@@ -116,14 +99,14 @@ class AssetController extends Controller
 
         }catch(Exception $e){
             $response = [
-                "error"=>$e->getMessage(),
+                "message"=>$e->getMessage(),
                 "status"=>406
             ];            
             $status = 406;
             
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status"=>406
             ];
             $status = 406; 
@@ -181,7 +164,7 @@ class AssetController extends Controller
                 throw new Exception("asset not found");
             }
             
-            $asset->assetId = $request->assetId;
+            $asset->assetNo = $request->assetNo;
             $asset->projectName  = $request->projectName;
             $asset->requesterDepartment  = $request->requesterDepartment;
             $asset->unitPlant = $request->unitPlant;
@@ -193,34 +176,17 @@ class AssetController extends Controller
             $asset->equipmentType  = $request->equipmentType;
             $asset->dateOfRequest = $request->dateOfRequest;
             $asset->requesterName = $request->requesterName;
-
-            $asset->department  = $request->department;
+            $asset->yearOfMfg = $request->yearOfMfg;
+            $asset->countryOfMfg = $request->countryOfMfg;
+            $asset->yearOfInstallTKAP = $request->yearOfInstallTKAP;
+            $asset->usedOrNew = $request->usedOrNew;
+            $asset->usagecode = $request->usagecode;
+            $asset->assetWeight = $request->assetWeight;
             $asset->controlDepartment  = $request->controlDepartment;
             $asset->userDepartment  = $request->userDepartment;
             $asset->section = $request->section;
-            $asset->financialAssetId = $request->financialAssetId;
-            $asset->assetType = $request->assetType;
-            $asset->usagecode = $request->usagecode;
-            $asset->yearOfMfg = $request->yearOfMfg;
-            $asset->usedOrNew = $request->usedOrNew;
-            $asset->manufacturer = $request->manufacturer;
-            $asset->manufacturerNo = $request->manufacturerNo;
-            $asset->weight = $request->weight;
-            $asset->description = $request->description;
-            $asset->countryOfMfg = $request->countryOfMfg;
-
-            // //imageStoring assteImage
-            // $image = $request->assetImage;
-            // if($image){  // your base64 encoded
-            //     $extension = $this->getExtension($image);
-            //     $replace = substr($image, 0, strpos($image, ',')+1); 
-            //     $image = str_replace($replace, '', $image); 
-            //     $image = str_replace(' ', '+', $image); 
-            //     $imageName = Str::random(10).'.'.$extension;
-            //     $imagePath = '/storage/app/public/'.$imageName;
-            //     Storage::disk('public')->put($imageName, base64_decode($image));
-            //     $asset->assetImage = $imagePath;
-            // }            
+            $asset->assetImage = $request->assetImage;
+            $asset->mfgSlNo = $request->mfgSlNo;
             $asset->status = $request->status;
 
             $asset->update();
@@ -241,7 +207,7 @@ class AssetController extends Controller
 
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status"=>406
             ];
             $status = 406; 
@@ -270,7 +236,7 @@ class AssetController extends Controller
 
         }catch(Exception $e){
             $response = [
-                "error" => $e->getMessage(),
+                "message" => $e->getMessage(),
                 "status" => 404
             ];
             $status = 404;     
@@ -289,24 +255,13 @@ class AssetController extends Controller
 
             }else{
                 $asset = DB::table('assets')
-                    ->join('departments','departments.id','=','assets.department')
-                    ->join('sections','sections.id','=','assets.section')
-                    ->join('assettypes','assettypes.id','=','assets.assetType')
-                    ->join('projects','projects.id','=','assets.project')
-                    // ->join('units','units.id','=','assets.unit')
-                    // ->join('lines','lines.id','=','assets.line')
+                    ->join('units','units.id','=','assets.unitPlant')
+                    ->join('lines','lines.id','=','assets.line')
                     // ->join('asset_masters','asset_masters.assetMasterName','=','assets.assetMaster')
                     // ->join('control_departments','control_departments.id','=','assets.controlDepartment')
                     // ->join('user_departments','user_departments.id','=','assets.userDepartment')
-                    // ->join('requester_departments','requester_departments.id','=','assets.requesterDepartment')
-                    // ->select('assets.*','assets.masterId','assets.id','asset_masters.id as assetMaster','assets.assetMaster as assetMasterName','assets.department',
-                    //  'departments.department_name as departmentName', 'assets.section', 'sections.section as sectionName',
-                    //  'assets.assetName', 'assets.assetType','assettypes.assetType as assetTypeName','projects.projectName as projectName','units.unitName as unitName','lines.lineName as lineName',
-                    //  'assettypes.assetType as assetTypeName','assets.controlDepartment','control_departments.controlDepartment as controlDepartmentName','assets.userDepartment','user_departments.userDepartment as userDepartmentName','assets.requesterDepartment','requester_departments.requesterDepartment as requesterDepartmentName')
-                     ->select('assets.*','assets.assetMaster as assetMasterName','assets.department',
-                     'departments.department_name as departmentName', 'assets.section', 'sections.section as sectionName',
-                     'assets.assetName', 'assets.assetType','assettypes.assetType as assetTypeName','projects.projectName as projectName',
-                     'assettypes.assetType as assetTypeName',)
+                    ->join('requester_departments','requester_departments.id','=','assets.requesterDepartment')
+                     ->select('assets.*','assets.unitPlant as unitPlantId','units.unitPlant as unitPlant','lines.lineName as lineName')
                      ->get();
                         
                 $response=[
@@ -325,7 +280,7 @@ class AssetController extends Controller
             
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status" => 406
                ];
             $status = 406; 

@@ -27,6 +27,20 @@ class AssetsImport implements ToModel
             'requesterName' =>$row['13'],
             'manufacturer'=>$row['14'],
             'description' =>$row['15'],
-        ]);
+
+            // 'assetId' =>$row['0'],  
+            // 'assetNo' =>$row['1'],
+            // 'projectName' =>$row['2'],
+            // 'requesterDepartment' =>$row['3'],
+            // 'unitPlant' =>$row['4'],
+            // 'line' =>$row['5'],
+            // 'component' =>$row['6'],
+            // 'operationNo' =>$row['7'],
+            // 'assetName' =>$row['8'],
+            // 'operationName' =>$row['9'],
+            // 'equipmentType' =>$row['10'],
+            // 'dateOfRequest' =>$row['11'],
+            // 'requesterName' =>$row['12'],
+         ]);
     }
 }

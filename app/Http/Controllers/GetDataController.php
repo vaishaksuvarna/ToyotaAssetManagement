@@ -10,12 +10,92 @@ use App\Models\Allocation;
 use App\Models\assettype;
 use App\Models\Vendor;
 use App\Models\Asset;
+use App\Models\requesterDepartment;
 use DB;
 use Exception;
 use Illuminate\Database\QueryException;
 
 class GetDataController extends Controller
 {
+
+    //Retrving all requesterDepartment
+    public function getrequesterDepartment()
+    {
+        try{
+            $requesterDepartment = requesterDepartment::all();
+
+            if(!$requesterDepartment){
+                throw new Exception("Requester Department not found");
+            }else{   
+
+                $requesterDepartment=DB::table('requester_departments')->select('id','requesterDepartment')->get();
+                
+                $response = [
+                    'success' => true,
+                    'data' => $requesterDepartment,
+                    'status' => 201
+                ];
+                $status = 201;   
+            }
+
+        }catch(Exception $e){
+            $response = [
+                "message"=>$e->getMessage(),
+                "status"=>406
+            ];             
+            $status = 406;
+
+        }catch(QueryException $e){
+            $response = [
+                "message" => $e->errorInfo,
+                "status"=>406
+            ];
+            $status = 406; 
+        }
+        
+        return response($response, $status);    
+    }
+
+   
+    public function getLine($id)
+    {
+        try{
+            $line=DB::table('lines')->where('unitPlant','=',$id)->get();
+
+            if(count($line)<=0){
+                throw new Exception("data not found");
+
+            }else{
+
+                $line = DB::table('lines')->select('lines.lineName','lines.id as lineId')->get();                
+
+                $response = [
+                    'success' => true,
+                    'data' => $line,
+                    'status' => 201
+                ];
+                $status = 201;   
+            }
+
+        }catch(Exception $e){
+            $response = [
+                "message"=>$e->getMessage(),
+                "status"=>406
+            ];             
+            $status = 406;
+
+        }catch(QueryException $e){
+            $response = [
+                "message" => $e->errorInfo,
+                "status"=>406
+            ];
+            $status = 406; 
+        }
+        
+        return response($response, $status);    
+    }
+
+
     //Retrving all Units
     public function getUnit()
     {
@@ -26,8 +106,7 @@ class GetDataController extends Controller
                 throw new Exception("unit not found");
             }else{   
 
-                $unit=DB::table('units')->select('id','unitName')->get();
-                
+                $unit = DB::table('units')->select('units.unitPlant','units.id as unitPlantId')->get();                
                 $response = [
                     'success' => true,
                     'data' => $unit,
@@ -38,14 +117,14 @@ class GetDataController extends Controller
 
         }catch(Exception $e){
             $response = [
-                "error"=>$e->getMessage(),
+                "message"=>$e->getMessage(),
                 "status"=>406
             ];             
             $status = 406;
 
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status"=>406
             ];
             $status = 406; 
@@ -75,14 +154,14 @@ class GetDataController extends Controller
 
         }catch(Exception $e){
             $response = [
-                "error"=>$e->getMessage(),
+                "message"=>$e->getMessage(),
                 "status"=>406
             ];             
             $status = 406;
 
         }catch(QueryException $e){
             $response = [
-                "error" => $e->errorInfo,
+                "message" => $e->errorInfo,
                 "status"=>406
             ];
             $status = 406; 

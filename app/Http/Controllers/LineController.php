@@ -21,9 +21,9 @@ class LineController extends Controller
             }else{
                 $line = new Line;
 
+                $line->unitPlant= $request->unitPlant;
                 $line->lineName= $request->lineName;
                 $line->description= $request->description;
-                $line->status = $request->status;
 
                 $line->save();
 
@@ -62,9 +62,9 @@ class LineController extends Controller
                 throw new Exception("Line not found");
             }
 
+            $line->unitPlant = $request->unitPlant;
             $line->lineName = $request->lineName;
             $line->description = $request->description;
-            $line->status = $request->status;
 
             $line->save();
 
@@ -140,6 +140,10 @@ class LineController extends Controller
                 throw new Exception("Line not found");
 
             }else{
+                $line = DB::table('lines')
+                ->join('units','units.id','=','lines.unitPlant')
+                ->select('lines.*','units.unitPlant as unitPlantName')
+                ->get();
 
                 $response=[
                     "message" => "Line List",
